@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -32,5 +31,10 @@ public class UserResource {
     public ResponseEntity<User> createUser(@RequestBody User user) throws URISyntaxException {
         User savedUser = userDaoService.save(user);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri()).build();
+    }
+
+    @DeleteMapping("/users/{id}")
+    public void deleteUser(@PathVariable Integer id){
+        userDaoService.deleteUserById(id);
     }
 }
