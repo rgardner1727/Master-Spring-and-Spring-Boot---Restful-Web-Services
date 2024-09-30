@@ -16,6 +16,8 @@ public class User {
     @JsonProperty("user_name") @Size(min=2, message="name must be at least two characters") private String name;
     @JsonProperty("birth_date") @Past(message="birthDate must be in the past") private LocalDate birthDate;
 
+    public User(){};
+
     public User(Integer id, String name, LocalDate birthDate) {
         this.id = id;
         this.name = name;

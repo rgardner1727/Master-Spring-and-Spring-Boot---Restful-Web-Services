@@ -10,27 +10,34 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 public class UserResource {
 
+    /*
     @Autowired
     private UserDaoService userDaoService;
+     */
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/users")
     public List<User> retrieveAllUsers(){
-        return userDaoService.findAllUsers();
+        return userRepository.findAll();
     }
 
     @GetMapping("/users/{id}")
     public EntityModel<User> retrieveUserById(@PathVariable Integer id){
-        User user = userDaoService.findUserById(id);
-        if(user == null)
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isEmpty())
             throw new UserNotFoundException("User with id " + id + " not found.");
 
-        EntityModel<User> entityModel = EntityModel.of(user);
+        EntityModel<User> entityModel = EntityModel.of(user.get());
 
         WebMvcLinkBuilder linkBuilder = WebMvcLinkBuilder.linkTo(methodOn(this.getClass()).retrieveAllUsers());
 
@@ -41,12 +48,12 @@ public class UserResource {
 
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@Valid @RequestBody User user) throws URISyntaxException {
-        User savedUser = userDaoService.save(user);
+        User savedUser = userRepository.save(user);
         return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri()).build();
     }
 
     @DeleteMapping("/users/{id}")
     public void deleteUser(@PathVariable Integer id){
-        userDaoService.deleteUserById(id);
+        userRepository.deleteById(id);
     }
 }
