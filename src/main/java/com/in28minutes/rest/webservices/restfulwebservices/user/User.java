@@ -3,10 +3,7 @@ package com.in28minutes.rest.webservices.restfulwebservices.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.in28minutes.rest.webservices.restfulwebservices.post.Post;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
@@ -19,7 +16,7 @@ public class User {
     @Id @GeneratedValue private Integer id;
     @JsonProperty("user_name") @Size(min=2, message="name must be at least two characters") private String name;
     @JsonProperty("birth_date") @Past(message="birthDate must be in the past") private LocalDate birthDate;
-    @OneToMany(mappedBy="user") @JsonIgnore List<Post> userPosts;
+    @OneToMany(mappedBy="user", fetch= FetchType.LAZY) @JsonIgnore List<Post> userPosts;
 
     public User(){}
 

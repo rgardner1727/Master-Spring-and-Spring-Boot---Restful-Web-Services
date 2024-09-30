@@ -1,14 +1,18 @@
 package com.in28minutes.rest.webservices.restfulwebservices.post;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.in28minutes.rest.webservices.restfulwebservices.user.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Post {
 
-    @GeneratedValue @Id
+    @GeneratedValue()
+    @Id
     private Integer id;
 
+    @Size(min=30)
     private String description;
 
     @ManyToOne(fetch= FetchType.LAZY)
@@ -32,13 +36,16 @@ public class Post {
         this.id = id;
     }
 
+    @JsonIgnore
     public User getUser() {
         return user;
     }
 
+    @JsonIgnore
     public void setUser(User user) {
         this.user = user;
     }
+
 
     @Override
     public String toString() {
